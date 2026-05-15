@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab SOP Workstation – Professional</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SOP Workstation">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚗️</text></svg>">
+    <link rel="manifest" href="data:application/json;base64,ewogICJzaG9ydF9uYW1lIjogIlNPUCBXb3Jrc3RhdGlvbiIsCiAgIm5hbWUiOiAiTGFiIFNPUCBXb3Jrc3RhdGlvbiAtIFByb2Zlc3Npb25hbCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCw8c3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDEwMCAxMDAnPjx0ZXh0IHk9Jy45ZW0nIGZvbnQtc2l6ZT0nOTAnPuKamO+4jzwvdGV4dD48L3N2Zz4iLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9LAogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCw8c3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDEwMCAxMDAnPjx0ZXh0IHk9Jy45ZW0nIGZvbnQtc2l6ZT0nOTAnPuKamO+4jzwvdGV4dD48L3N2Zz4iLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXSwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJ0aGVtZV9jb2xvciI6ICIjMWEzYTVmIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZWVmMmY3Igp9">
+    <style>
+        :root {
+            --primary: #1a3a5f;
+            --accent: #3498db;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --border: #dbe2ea;
+            --bg: #eef2f7;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+        }
+        [data-theme="dark"] {
+            --primary: #0f2a4a;
+            --accent: #60a5fa;
+            --bg: #0f172a;
+            --card-bg: #1e2937;
+            --text: #e2e8f0;
+            --border: #334155;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .app-wrapper { display: flex; flex: 1; }
+        .sidebar {
+            width: 340px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 1.2rem;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+        .sidebar.sidebar-hidden { display: none; }
+        .search-wrapper { position: relative; }
+        #sopListContainer {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 1001;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            max-height: 300px;
+            overflow-y: auto;
+            list-style: none;
+            padding: 0;
+            margin: 4px 0 0 0;
+        }
+        .sop-list-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.15s;
+        }
+        .sop-list-item:last-child { border-bottom: none; }
+        .sop-list-item:hover { background: #f0f7ff; color: var(--primary); }
+        .sop-list-item strong { color: var(--accent); }
+        .badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 10px; background: var(--warning); color: white; margin-left: 6px; }
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-sm { padding: 4px 8px; font-size: 0.7rem; }
+        .btn-icon {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            cursor: pointer;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.9rem;
+            line-height: 1;
+        }
+        .btn-icon:hover { background: var(--bg); }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            color: var(--text);
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        .main-content { flex: 1; padding: 1.5rem; }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        .section-box {
+            border-left: 5px solid var(--accent);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: var(--bg);
+            border-radius: 8px;
+            position: relative;
+        }
+        .title-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .title-row input { margin-top: 0; flex: 1; }
+        .editor-toolbar {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 4px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 4px;
+        }
+        .editor-toolbar button {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+            color: var(--text);
+        }
+        .editor-toolbar button:hover { background: var(--bg); }
+        .rich-editor {
+            min-height: 120px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px;
+            background: var(--card-bg);
+            color: var(--text);
+            outline: none;
+            overflow-y: auto;
+        }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px; }
+        .gallery-item {
+            border: 1px solid var(--border);
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .gallery-item img {
+            max-width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .gallery-item .pdf-icon, .gallery-item .video-icon {
+            font-size: 3rem;
+            cursor: pointer;
+        }
+        .gallery-item .pdf-icon { color: var(--danger); }
+        .gallery-item .video-icon { color: var(--accent); }
+        .gallery-item .media-caption {
+            font-size: 0.7rem;
+            width: 100%;
+            border: none;
+            text-align: center;
+            background: transparent;
+            color: var(--text);
+        }
+        .block-actions { position: absolute; top: 5px; right: 5px; display: flex; gap: 4px; }
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        footer span { cursor: pointer; text-decoration: underline; }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2000;
+        }
+        .modal {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            min-width: 320px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .modal h3 { margin-top: 0; }
+        .viewer-modal-content {
+            width: 90vw;
+            height: 85vh;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .viewer-modal-content .viewer-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .viewer-modal-content iframe, .viewer-modal-content video {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .pending-change-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 0; border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+        .pending-change-item input[type="checkbox"] { width: auto; margin: 0; }
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .toast {
+            pointer-events: auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: var(--text);
+            white-space: nowrap;
+            animation: slideUp 0.3s ease-out;
+            transition: opacity 0.3s;
+        }
+        .toast.loading { border-left: 5px solid var(--accent); }
+        .toast.success { border-left: 5px solid var(--success); }
+        .toast.error { border-left: 5px solid var(--danger); }
+        .toast .spinner {
+            width: 18px;
+            height: 18px;
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .toast .retry-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .toast .close-toast {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media print {
+            .no-print, .sidebar, header, footer, .modal-overlay, #toast-container { display: none !important; }
+            .main-content { width: 100%; }
+            .block-actions, .btn-icon { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <button id="toggleSidebarBtn" class="btn btn-primary" style="background:transparent; border:none; color:white; font-size:1.2rem; padding:0 8px;" title="Hide Menu">◀</button>
+        <strong id="mainHeaderTitle">Lab SOP Workstation</strong>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <button id="darkModeToggle" class="btn btn-primary" style="background:transparent; border:1px solid white; color:white; padding:4px 8px; font-size:1rem;" title="Toggle dark mode">🌙</button>
+        <span id="userBadge" style="font-size:0.7rem; background:#2c3e50; padding:4px 10px; border-radius:10px;">VIEWER</span>
+        <button id="undoBtn" class="btn btn-sm" style="background:transparent; border:1px solid white; color:white; display:none;" title="Undo">↩️</button>
+        <button id="redoBtn" class="btn btn-sm" style="background:transparent; border:1px solid white; color:white; display:none;" title="Redo">↪️</button>
+        <button id="adminLogoutBtn" style="display:none; background:transparent; border:1px solid white; color:white; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:0.8rem;" onclick="logoutAdmin()">Logout Admin</button>
+        <button id="saveSopBtn" class="btn btn-success">💾 Save Current <span class="doc-term">SOP</span></button>
+        <button id="installBtn" class="btn btn-primary" style="display:none;" title="Install App">📲 Install</button>
+        <button onclick="window.print()" class="btn btn-primary">🖨️ Print PDF</button>
+    </div>
+</header>
+
+<div class="app-wrapper">
+    <aside class="sidebar no-print" id="sidebar">
+        <!-- Admin Settings Panel -->
+        <div id="adminSettingsPanel" style="display:none; margin-bottom:15px; border:1px solid var(--accent); border-radius:8px; padding:10px;">
+            <h4 style="margin:0 0 8px 0;">⚙️ Global Settings</h4>
+            <label style="font-size:0.8rem;">Header Title</label>
+            <input type="text" id="headerTitleInput" placeholder="Lab SOP Workstation" value="" style="margin-bottom:8px;">
+            <label style="font-size:0.8rem;">Document Term (max 8 chars)</label>
+            <input type="text" id="docTermInput" maxlength="8" placeholder="SOP" style="margin-bottom:8px;">
+            <button id="saveSettingsBtn" class="btn btn-primary btn-sm" style="width:100%; margin-top:8px;">Save Settings</button>
+        </div>
+        <div id="adminCategoryPanel" style="display:none; margin-bottom:15px; border:1px solid var(--accent); border-radius:8px; padding:10px;">
+            <h4 style="margin:0 0 8px 0;">📂 Manage Categories</h4>
+            <div id="categoryManageList" style="margin-bottom:8px;"></div>
+            <div style="display:flex; gap:6px;">
+                <input type="text" id="newCategoryInput" placeholder="New category name" style="margin-top:0;">
+                <button id="addCategoryBtn" class="btn btn-primary btn-sm">+ Add</button>
+            </div>
+        </div>
+        <label>🔍 Step 1: Filter Category</label>
+        <select id="categoryFilter" onchange="onFilterChange()">
+            <option value="all">All Categories</option>
+        </select>
+        <div class="search-wrapper" style="margin-top:12px;">
+            <label>📂 Step 2: Select <span class="doc-term">SOP</span> to Load</label>
+            <input type="text" id="sidebarSearch" placeholder="Type to search (also in text)..." onkeyup="onSearchKeyup()" onfocus="onSearchFocus()" autocomplete="off">
+            <ul id="sopListContainer"></ul>
+        </div>
+        <hr style="margin:20px 0;">
+        <label>🧮 Attached Calculators</label>
+        <div id="calcList" style="margin-top:10px; max-height:200px; overflow-y:auto;"></div>
+        <hr style="margin:20px 0;">
+        <label>👤 Permissions</label>
+        <select id="roleSelector" onchange="setRole()">
+            <option value="viewer">Viewer</option>
+            <option value="editor">Editor</option>
+        </select>
+        <p style="font-size:0.7rem; margin:4px 0; color:var(--text); opacity:0.7;">
+            <strong>Viewer:</strong> read &amp; print only<br>
+            <strong>Editor:</strong> full editing (saves as pending)<br>
+            <strong>Admin:</strong> all rights + management
+        </p>
+        <div id="adminPendingPanel" style="display:none; margin-top:20px; border:1px solid var(--warning); border-radius:8px; padding:10px; background:#fff9e6;">
+            <h4 style="margin:0 0 10px 0; color:var(--warning);">⏳ Pending Changes</h4>
+            <div id="pendingSOPList" style="max-height:300px; overflow-y:auto;"></div>
+            <p style="font-size:0.7rem; margin:6px 0; color:var(--text);">Only checked changes will be applied. Unchecked changes will be discarded.</p>
+            <button id="applySelectedChangesBtn" class="btn btn-success btn-sm" style="width:100%;">✅ Save Approved Changes</button>
+        </div>
+        <div id="adminDataPanel" style="display:none; margin-top:20px; border:1px solid var(--primary); border-radius:8px; padding:10px;">
+            <h4 style="margin:0 0 10px 0;">📦 Data Management</h4>
+            <button id="exportBackupBtn" class="btn btn-primary btn-sm" style="width:100%; margin-bottom:6px;">📤 Export Backup</button>
+            <button id="importBackupBtn" class="btn btn-primary btn-sm" style="width:100%; margin-bottom:6px;">📥 Import Backup</button>
+            <button id="clearAllDataBtn" class="btn btn-danger btn-sm" style="width:100%;">🧹 Clear All Data</button>
+        </div>
+        <div id="adminLibraryPanel" style="display:none; margin-top:20px; border:1px solid var(--primary); border-radius:8px; padding:10px;">
+            <h4 style="margin:0 0 10px 0;">📚 File Library</h4>
+            <div id="libraryList" style="max-height:250px; overflow-y:auto; margin-bottom:8px;"></div>
+            <p style="font-size:0.7rem; margin:4px 0; color:var(--text);">Manage uploaded calculators & media.</p>
+            <button id="cleanOrphanFilesBtn" class="btn btn-warning btn-sm" style="width:100%;">🧹 Remove Unused Files</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="card">
+            <h3>📄 Document Control</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr 100px; gap:10px;">
+                <div><label><span class="doc-term">SOP</span> ID</label><input type="text" id="sopId" placeholder="e.g. LAB-001"></div>
+                <div><label><span class="doc-term">SOP</span> Title</label><input type="text" id="sopTitle" placeholder="Method Name"></div>
+                <div><label>Category</label><select id="sopCategory"></select></div>
+            </div>
+            <div style="margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <div id="adminDeleteContainer" style="display:none;">
+                    <button id="adminDeleteSOPBtn" class="btn btn-danger btn-sm">🗑️ Delete This <span class="doc-term">SOP</span></button>
+                </div>
+                <button id="clearFormBtn" class="btn btn-warning btn-sm" style="display:none;">🧽 Clear Form</button>
+                <button id="exportSingleSOPBtn" class="btn btn-primary btn-sm" style="display:none;">📤 Export This <span class="doc-term">SOP</span></button>
+                <button id="importSingleSOPBtn" class="btn btn-primary btn-sm" style="display:none;">📥 Import <span class="doc-term">SOP</span></button>
+            </div>
+        </div>
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <h3>📋 <span class="doc-term">SOP</span> Sections</h3>
+                <div class="no-print" style="display:flex; gap:8px;" id="sectionAddButtons">
+                    <button id="addTextBlockBtn" class="btn btn-primary btn-sm">+ Text</button>
+                    <button id="addMediaBlockBtn" class="btn btn-primary btn-sm">+ Media</button>
+                    <button id="addCalcBlockBtn" class="btn btn-primary btn-sm">+ Calculator</button>
+                </div>
+            </div>
+            <div id="blocksRoot" style="margin-top:10px;"></div>
+        </div>
+    </main>
+</div>
+
+<footer>
+    <span onclick="openAdminLogin()">Dr. Sivaramakrishna Mallampalli</span>
+</footer>
+
+<!-- Admin login modal -->
+<div id="loginModal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+        <h3>🔐 Administrator Login</h3>
+        <input type="text" id="adminUser" placeholder="Username"><br><br>
+        <input type="password" id="adminPass" placeholder="Password"><br><br>
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+            <button onclick="closeAdminLogin()" class="btn">Cancel</button>
+            <button id="loginBtn" class="btn btn-primary">Login</button>
+        </div>
+        <div id="loginError" style="color:var(--danger); margin-top:8px; font-size:0.8rem;"></div>
+        <hr>
+        <button id="changeCredBtn" class="btn btn-warning btn-sm" style="display:none;">Change Credentials</button>
+    </div>
+</div>
+<div id="credModal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+        <h3>🔑 Change Admin Credentials</h3>
+        <input type="text" id="newAdminUser" placeholder="New Username"><br><br>
+        <input type="password" id="newAdminPass" placeholder="New Password"><br><br>
+        <button id="saveCredBtn" class="btn btn-success">Save</button>
+        <button onclick="closeCredModal()" class="btn">Cancel</button>
+    </div>
+</div>
+
+<!-- Viewer modal for PDF and Video -->
+<div id="viewerModal" class="modal-overlay" style="display:none;">
+    <div class="viewer-modal-content" style="position:relative;">
+        <button class="viewer-close" onclick="closeViewer()">✕</button>
+        <div id="viewerContainer" style="width:100%; height:100%;"></div>
+    </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+(function() {
+    // ---------- INDEXEDDB SETUP ----------
+    const DB_NAME = 'LabWorkstationDB';
+    const STORE_NAME = 'objects';
+    let db;
+
+    function openDB() {
+        return new Promise((resolve, reject) => {
+            const req = indexedDB.open(DB_NAME, 1);
+            req.onupgradeneeded = e => {
+                if (!e.target.result.objectStoreNames.contains(STORE_NAME)) {
+                    e.target.result.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                }
+            };
+            req.onsuccess = e => { db = e.target.result; resolve(); };
+            req.onerror = e => reject(e.target.error);
+        });
+    }
+    const getObj = id => new Promise((res, rej) => {
+        const t = db.transaction(STORE_NAME,'readonly').objectStore(STORE_NAME).get(id);
+        t.onsuccess = () => res(t.result); t.onerror = () => rej(t.error);
+    });
+    const putObj = obj => new Promise((res, rej) => {
+        const t = db.transaction(STORE_NAME,'readwrite').objectStore(STORE_NAME).put(obj);
+        t.onsuccess = () => res(); t.onerror = () => rej(t.error);
+    });
+    const delObj = id => new Promise((res, rej) => {
+        const t = db.transaction(STORE_NAME,'readwrite').objectStore(STORE_NAME).delete(id);
+        t.onsuccess = () => res(); t.onerror = () => rej(t.error);
+    });
+    const getAll = () => new Promise((res, rej) => {
+        const t = db.transaction(STORE_NAME,'readonly').objectStore(STORE_NAME).getAll();
+        t.onsuccess = () => res(t.result); t.onerror = () => rej(t.error);
+    });
+    const clearAll = () => new Promise((res, rej) => {
+        const t = db.transaction(STORE_NAME,'readwrite').objectStore(STORE_NAME).clear();
+        t.onsuccess = () => res(); t.onerror = () => rej(t.error);
+    });
+
+    // Toast system
+    function showToast(msg, type='info', retryCb=null) {
+        const c = document.getElementById('toast-container');
+        const t = document.createElement('div'); t.className = 'toast '+type;
+        const s = document.createElement('span'); s.textContent = msg; t.appendChild(s);
+        if(type==='loading') { const sp = document.createElement('div'); sp.className='spinner'; t.insertBefore(sp, s); }
+        if(type==='error' && retryCb) {
+            const b = document.createElement('button'); b.className='retry-btn'; b.textContent='Try again';
+            b.onclick = () => { retryCb(); t.remove(); }; t.appendChild(b);
+        }
+        const cl = document.createElement('button'); cl.className='close-toast'; cl.textContent='✕';
+        cl.onclick = () => t.remove(); t.appendChild(cl);
+        c.appendChild(t);
+        if(type!=='loading') setTimeout(() => { if(t.parentNode) t.remove(); }, 4000);
+        return t;
+    }
+    function updateToast(t, msg, type, retryCb=null) {
+        if(!t) return; t.className = 'toast '+type;
+        const s = t.querySelector('span'); if(s) s.textContent = msg;
+        const sp = t.querySelector('.spinner');
+        if(type==='loading' && !sp) { const d=document.createElement('div'); d.className='spinner'; t.insertBefore(d, t.firstChild); }
+        else if(type!=='loading' && sp) sp.remove();
+        const rb = t.querySelector('.retry-btn');
+        if(type==='error' && retryCb) {
+            if(!rb) { const b=document.createElement('button'); b.className='retry-btn'; b.textContent='Try again';
+                b.onclick=()=>{retryCb(); t.remove();}; t.appendChild(b); }
+            else rb.onclick=()=>{retryCb(); t.remove();};
+        } else if(rb) rb.remove();
+        if(type!=='loading') setTimeout(() => { if(t.parentNode) t.remove(); }, 4000);
+    }
+
+    let role='viewer', isAdmin=false, blocks=[], currentSOP=null, currentPending=null, speech=null;
+
+    // Dark mode
+    const applyDark = v => { document.documentElement.setAttribute('data-theme', v?'dark':''); document.getElementById('darkModeToggle').innerHTML=v?'☀️':'🌙'; };
+    applyDark(localStorage.getItem('darkMode')==='true');
+    document.getElementById('darkModeToggle').onclick = ()=>{
+        const d = document.documentElement.getAttribute('data-theme')==='dark';
+        applyDark(!d); localStorage.setItem('darkMode', !d);
+    };
+
+    // Settings
+    const DEF_SETTINGS = { headerTitle:'Lab SOP Workstation', docTerm:'SOP' };
+    const loadSets = () => JSON.parse(localStorage.getItem('settings')) || {...DEF_SETTINGS};
+    const saveSets = s => localStorage.setItem('settings', JSON.stringify(s));
+    const applySets = s => {
+        document.getElementById('mainHeaderTitle').textContent = s.headerTitle;
+        document.querySelectorAll('.doc-term').forEach(e => e.textContent = s.docTerm);
+        document.getElementById('saveSopBtn').innerHTML = `💾 Save Current <span class="doc-term">${s.docTerm}</span>`;
+        const lbl = document.querySelector('.search-wrapper label');
+        if(lbl) lbl.innerHTML = `📂 Step 2: Select <span class="doc-term">${s.docTerm}</span> to Load`;
+    };
+
+    // Credentials
+    const getCred = () => JSON.parse(localStorage.getItem('adminCred')) || {user:'admin', pass:'admin'};
+    const saveCred = c => localStorage.setItem('adminCred', JSON.stringify(c));
+
+    // Categories
+    const DEF_CATS = ['general','wet','hplc'];
+    const loadCats = () => JSON.parse(localStorage.getItem('categories')) || [...DEF_CATS];
+    const saveCats = c => localStorage.setItem('categories', JSON.stringify(c));
+
+    // Storage keys
+    const keyAppr = id => 'SOP_'+id, keyPend = id => 'SOP_'+id+'_pending';
+    const getAppr = id => { const r=localStorage.getItem(keyAppr(id)); return r?JSON.parse(r):null; };
+    const getPend = id => { const r=localStorage.getItem(keyPend(id)); return r?JSON.parse(r):null; };
+    const saveAppr = (id,d) => localStorage.setItem(keyAppr(id), JSON.stringify(d));
+    const savePend = (id,d) => localStorage.setItem(keyPend(id), JSON.stringify(d));
+    const delAppr = id => { localStorage.removeItem(keyAppr(id)); localStorage.removeItem(keyPend(id)); };
+    const delPend = id => localStorage.removeItem(keyPend(id));
+
+    const uuid = () => crypto.randomUUID?.() ?? 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c=>{ const r=Math.random()*16|0; return (c==='x'?r:r&0x3|0x8).toString(16); });
+
+    function stopSpeech() { if(speech) { speechSynthesis.cancel(); speech=null; } }
+
+    // Search index (full-text)
+    function updateSearchIndex(id, blocks) {
+        const index = JSON.parse(localStorage.getItem('searchIndex') || '{}');
+        const texts = [];
+        blocks.forEach(b => {
+            if (b.type === 'text') {
+                if (b._content) texts.push(b._content);
+                else if (b.contentId) {
+                    // updated at save time
+                }
+            }
+        });
+        if (texts.length) {
+            index[id] = texts.join(' ').toLowerCase();
+        } else {
+            delete index[id];
+        }
+        localStorage.setItem('searchIndex', JSON.stringify(index));
+    }
+
+    function removeFromSearchIndex(id) {
+        const index = JSON.parse(localStorage.getItem('searchIndex') || '{}');
+        delete index[id];
+        localStorage.setItem('searchIndex', JSON.stringify(index));
+    }
+
+    // Undo/Redo state
+    let undoStack = [], redoStack = [];
+    function pushState() {
+        const state = {
+            id: document.getElementById('sopId').value,
+            title: document.getElementById('sopTitle').value,
+            category: document.getElementById('sopCategory').value,
+            blocks: JSON.parse(JSON.stringify(blocks))
+        };
+        undoStack.push(state);
+        if (undoStack.length > 50) undoStack.shift();
+        redoStack = [];
+        updateUndoRedoButtons();
+    }
+    function undo() {
+        if (undoStack.length === 0) return;
+        const state = undoStack.pop();
+        redoStack.push({
+            id: document.getElementById('sopId').value,
+            title: document.getElementById('sopTitle').value,
+            category: document.getElementById('sopCategory').value,
+            blocks: JSON.parse(JSON.stringify(blocks))
+        });
+        document.getElementById('sopId').value = state.id;
+        document.getElementById('sopTitle').value = state.title;
+        document.getElementById('sopCategory').value = state.category || loadCats()[0];
+        blocks = state.blocks;
+        renderBlocks();
+        updateUndoRedoButtons();
+    }
+    function redo() {
+        if (redoStack.length === 0) return;
+        const state = redoStack.pop();
+        undoStack.push({
+            id: document.getElementById('sopId').value,
+            title: document.getElementById('sopTitle').value,
+            category: document.getElementById('sopCategory').value,
+            blocks: JSON.parse(JSON.stringify(blocks))
+        });
+        document.getElementById('sopId').value = state.id;
+        document.getElementById('sopTitle').value = state.title;
+        document.getElementById('sopCategory').value = state.category || loadCats()[0];
+        blocks = state.blocks;
+        renderBlocks();
+        updateUndoRedoButtons();
+    }
+    function updateUndoRedoButtons() {
+        document.getElementById('undoBtn').style.display = undoStack.length ? 'inline-flex' : 'none';
+        document.getElementById('redoBtn').style.display = redoStack.length ? 'inline-flex' : 'none';
+    }
+    document.getElementById('undoBtn').onclick = undo;
+    document.getElementById('redoBtn').onclick = redo;
+
+    // Auto-save draft
+    let autoSaveInterval = null;
+    function startAutoSave() {
+        if (autoSaveInterval) clearInterval(autoSaveInterval);
+        autoSaveInterval = setInterval(() => {
+            if (role === 'viewer') return;
+            const id = document.getElementById('sopId').value.trim();
+            if (!id) return;
+            const draft = {
+                id,
+                title: document.getElementById('sopTitle').value,
+                category: document.getElementById('sopCategory').value,
+                blocks: JSON.parse(JSON.stringify(blocks))
+            };
+            localStorage.setItem('autoDraft', JSON.stringify(draft));
+        }, 30000);
+    }
+    function clearAutoDraft() {
+        localStorage.removeItem('autoDraft');
+    }
+    function restoreAutoDraft() {
+        const raw = localStorage.getItem('autoDraft');
+        if (!raw) return false;
+        try {
+            const draft = JSON.parse(raw);
+            document.getElementById('sopId').value = draft.id;
+            document.getElementById('sopTitle').value = draft.title;
+            document.getElementById('sopCategory').value = draft.category || loadCats()[0];
+            blocks = draft.blocks;
+            return true;
+        } catch { return false; }
+    }
+    startAutoSave();
+
+    function updateUI() {
+        document.getElementById('userBadge').innerText = isAdmin?'ADMIN':role.toUpperCase();
+        document.getElementById('roleSelector').disabled = isAdmin;
+        document.getElementById('adminLogoutBtn').style.display = isAdmin?'inline-block':'none';
+        document.getElementById('adminDeleteContainer').style.display = isAdmin?'block':'none';
+        const canEdit = role==='editor' || isAdmin;
+        document.getElementById('clearFormBtn').style.display = canEdit?'inline-block':'none';
+        document.getElementById('sectionAddButtons').style.display = canEdit?'flex':'none';
+        document.getElementById('exportSingleSOPBtn').style.display = canEdit?'inline-block':'none';
+        document.getElementById('importSingleSOPBtn').style.display = canEdit?'inline-block':'none';
+        document.getElementById('adminCategoryPanel').style.display = isAdmin?'block':'none';
+        document.getElementById('adminPendingPanel').style.display = isAdmin?'block':'none';
+        document.getElementById('adminDataPanel').style.display = isAdmin?'block':'none';
+        document.getElementById('adminLibraryPanel').style.display = isAdmin?'block':'none';
+        document.getElementById('adminSettingsPanel').style.display = isAdmin?'block':'none';
+        if(isAdmin) {
+            const s = loadSets();
+            document.getElementById('headerTitleInput').value = s.headerTitle;
+            document.getElementById('docTermInput').value = s.docTerm;
+            renderCatMgmt(); renderPend(); renderLib();
+        }
+        renderBlocks();
+    }
+
+    function renderCatDropdowns() {
+        const cats = loadCats();
+        const f = document.getElementById('categoryFilter'), s = document.getElementById('sopCategory');
+        const fv=f.value, sv=s.value;
+        f.innerHTML='<option value="all">All Categories</option>'; s.innerHTML='';
+        cats.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c.charAt(0).toUpperCase()+c.slice(1); s.appendChild(o); const o2=document.createElement('option'); o2.value=c; o2.textContent=c.charAt(0).toUpperCase()+c.slice(1); f.appendChild(o2); });
+        if(cats.includes(fv)) f.value=fv;
+        if(cats.includes(sv)) s.value=sv; else if(cats.length) s.value=cats[0];
+    }
+    function renderCatMgmt() {
+        const c=document.getElementById('categoryManageList'); c.innerHTML='';
+        loadCats().forEach(cat=>{ const d=document.createElement('div'); d.style='display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;'; d.innerHTML=`<span>${cat}</span><div><button class="btn btn-sm" style="padding:2px 4px;" onclick="renameCat('${cat}')">✏️</button><button class="btn btn-sm btn-danger" style="padding:2px 4px;" onclick="delCat('${cat}')">🗑️</button></div>`; c.appendChild(d); });
+    }
+    window.renameCat = o => { const n=prompt('Rename:',o); if(!n||!n.trim()||n===o) return; const cats=loadCats(); const i=cats.indexOf(o); if(i<0) return; if(cats.includes(n)) { alert('Exists'); return; } cats[i]=n; saveCats(cats); renderCatDropdowns(); renderCatMgmt(); refreshDropdown(); showToast('Category renamed.','success'); };
+    window.delCat = c => { if(!confirm(`Delete "${c}"?`)) return; let cats=loadCats(); cats=cats.filter(x=>x!==c); if(!cats.length) cats=['general']; saveCats(cats); renderCatDropdowns(); renderCatMgmt(); refreshDropdown(); showToast('Category deleted.','success'); };
+    document.getElementById('addCategoryBtn').onclick = () => { const n=document.getElementById('newCategoryInput').value.trim().toLowerCase(); if(!n) return; const cats=loadCats(); if(cats.includes(n)) { alert('Exists'); return; } cats.push(n); saveCats(cats); document.getElementById('newCategoryInput').value=''; renderCatDropdowns(); renderCatMgmt(); refreshDropdown(); showToast('Category added.','success'); };
+
+    window.setRole = function() { if(!isAdmin) role=document.getElementById('roleSelector').value; updateUI(); };
+    window.openAdminLogin = () => { document.getElementById('loginModal').style.display='flex'; document.getElementById('loginError').innerText=''; document.getElementById('adminUser').value=''; document.getElementById('adminPass').value=''; document.getElementById('changeCredBtn').style.display=isAdmin?'inline-block':'none'; };
+    window.closeAdminLogin = () => { document.getElementById('loginModal').style.display='none'; };
+    document.getElementById('loginBtn').onclick = () => { const u=document.getElementById('adminUser').value.trim(), p=document.getElementById('adminPass').value.trim(); const cred=getCred(); if(u===cred.user&&p===cred.pass) { isAdmin=true; role='editor'; updateUI(); closeAdminLogin(); showToast('Logged in as Administrator.','success'); } else { document.getElementById('loginError').innerText='Invalid credentials.'; showToast('Invalid credentials.','error'); } };
+    window.logoutAdmin = () => { if(!confirm('Logout?')) return; isAdmin=false; role='viewer'; updateUI(); document.getElementById('sopId').value=''; document.getElementById('sopTitle').value=''; blocks=[{type:'text',title:'',contentId:null}]; renderBlocks(); showToast('Logged out.','success'); };
+    document.getElementById('changeCredBtn').onclick = () => { closeAdminLogin(); document.getElementById('credModal').style.display='flex'; document.getElementById('newAdminUser').value=getCred().user; document.getElementById('newAdminPass').value=''; };
+    window.closeCredModal = () => { document.getElementById('credModal').style.display='none'; };
+    document.getElementById('saveCredBtn').onclick = () => { const nu=document.getElementById('newAdminUser').value.trim(), np=document.getElementById('newAdminPass').value.trim(); if(!nu||!np) { showToast('Both required.','error'); return; } saveCred({user:nu, pass:np}); showToast('Credentials updated.','success'); closeCredModal(); isAdmin=false; role='viewer'; updateUI(); };
+
+    document.getElementById('saveSettingsBtn').onclick = () => { if(!isAdmin) return; const ht=document.getElementById('headerTitleInput').value.trim(), dt=document.getElementById('docTermInput').value.trim(); if(!ht) { showToast('Header required','error'); return; } if(!dt) { showToast('Term required','error'); return; } if(dt.length>8) { showToast('Max 8 chars','error'); return; } saveSets({headerTitle:ht, docTerm:dt.toUpperCase()}); applySets({headerTitle:ht, docTerm:dt.toUpperCase()}); showToast('Settings saved.','success'); };
+
+    // Data management
+    document.getElementById('exportBackupBtn').onclick = async () => { if(!isAdmin) return; const toast=showToast('Exporting…','loading'); try { const bk={localStorage:{},indexedDB:[]}; for(let i=0;i<localStorage.length;i++) { const k=localStorage.key(i); bk.localStorage[k]=localStorage.getItem(k); } bk.indexedDB=await getAll(); const blob=new Blob([JSON.stringify(bk)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='Backup_'+new Date().toISOString().slice(0,10)+'.json'; a.click(); URL.revokeObjectURL(a.href); updateToast(toast,'Backup downloaded.','success'); } catch(e) { updateToast(toast,'Export failed.','error',()=>document.getElementById('exportBackupBtn').click()); } };
+    document.getElementById('importBackupBtn').onclick = () => { if(!isAdmin) return; const inp=document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange=async e=>{ const f=e.target.files[0]; if(!f) return; const toast=showToast('Restoring…','loading'); const r=new FileReader(); r.onload=async ev=>{ try{ const b=JSON.parse(ev.target.result); if(!b.localStorage||!b.indexedDB) throw Error(); if(!confirm('Replace all data?')) { toast.remove(); return; } localStorage.clear(); for(const k in b.localStorage) localStorage.setItem(k, b.localStorage[k]); await clearAll(); for(const o of b.indexedDB) await putObj(o); updateToast(toast,'Backup restored. Reloading…','success'); setTimeout(()=>location.reload(),1500); } catch { updateToast(toast,'Invalid file.','error',()=>document.getElementById('importBackupBtn').click()); } }; r.readAsText(f); }; inp.click(); };
+    document.getElementById('clearAllDataBtn').onclick = async () => { if(!isAdmin) return; if(!confirm('⚠️ Delete ALL data?')) return; const toast=showToast('Clearing…','loading'); try { localStorage.clear(); await clearAll(); updateToast(toast,'All data cleared. Reloading…','success'); setTimeout(()=>location.reload(),1500); } catch(e) { updateToast(toast,'Clear failed.','error',()=>document.getElementById('clearAllDataBtn').click()); } };
+
+    // Library
+    async function renderLib() {
+        const c=document.getElementById('libraryList'); c.innerHTML='';
+        const all=await getAll(); const items=all.filter(o=>o.type==='calculator'||o.type==='media-item');
+        if(!items.length) { c.innerHTML='<div style="font-style:italic;">No files.</div>'; return; }
+        for(const o of items) {
+            const d=document.createElement('div'); d.style='display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid var(--border); font-size:0.8rem;';
+            let name=''; if(o.type==='calculator') name=`🧮 ${o.id.substring(0,8)}...`; else {
+                const mime=o.data?.mimeType;
+                if(mime==='application/pdf') name=`📄 ${o.data?.caption||'PDF'}`;
+                else if(mime==='video/url') name=`🎥 ${o.data?.caption||'Video'}`;
+                else name=`🖼️ ${o.data?.caption||'Image'}`;
+            }
+            d.innerHTML=`<span>${name}</span><button class="btn btn-danger btn-sm" style="padding:2px 4px;" data-id="${o.id}">Del</button>`;
+            c.appendChild(d);
+            d.querySelector('button').onclick=async ()=>{ if(!confirm(`Delete ${o.id}?`)) return; const toast=showToast('Deleting…','loading'); try{
+                const keys=Object.keys(localStorage).filter(k=>k.startsWith('SOP_'));
+                for(const k of keys) { const raw=localStorage.getItem(k); if(!raw) continue; try{ const sop=JSON.parse(raw); let ch=false; sop.blocks=sop.blocks.map(b=>{ if(b.type==='media'&&b.itemIds&&b.itemIds.includes(o.id)) { b.itemIds=b.itemIds.filter(id=>id!==o.id); ch=true; } else if(b.type==='calculator'&&b.contentId===o.id) { b.contentId=null; ch=true; } return b; }); if(ch) localStorage.setItem(k,JSON.stringify(sop)); } catch{} }
+                await delObj(o.id); updateToast(toast,'File deleted.','success'); if(currentSOP) await loadSOP(currentSOP); renderLib();
+            } catch { updateToast(toast,'Delete failed.','error',()=>{}); } };
+        }
+    }
+    document.getElementById('cleanOrphanFilesBtn').onclick = async () => { if(!isAdmin) return; const toast=showToast('Cleaning…','loading'); try{
+        const all=await getAll(); const used=new Set();
+        const keys=Object.keys(localStorage).filter(k=>k.startsWith('SOP_'));
+        for(const k of keys) { const raw=localStorage.getItem(k); if(!raw) continue; try{ const sop=JSON.parse(raw); if(!sop.blocks) continue; sop.blocks.forEach(b=>{ if(b.contentId) used.add(b.contentId); if(b.itemIds) b.itemIds.forEach(id=>used.add(id)); }); } catch{} }
+        let rem=0; for(const o of all) { if(o.type==='text') continue; if(!used.has(o.id)) { await delObj(o.id); rem++; } }
+        updateToast(toast,`Removed ${rem} orphan(s).`,'success'); renderLib();
+    } catch { updateToast(toast,'Clean failed.','error',()=>document.getElementById('cleanOrphanFilesBtn').click()); } };
+
+    // Search dropdown with full-text
+    const dropdownVis = () => document.getElementById('categoryFilter').value!=='all' || document.getElementById('sidebarSearch').value.trim().length>0;
+    function renderDropdown() {
+        const c=document.getElementById('sopListContainer'); if(!dropdownVis()) { c.style.display='none'; c.innerHTML=''; return; }
+        const filter=document.getElementById('categoryFilter').value, search=document.getElementById('sidebarSearch').value.trim().toLowerCase();
+        c.innerHTML=''; const ids=new Set();
+        for(let i=0;i<localStorage.length;i++) { const k=localStorage.key(i); if(k.startsWith('SOP_')&&!k.endsWith('_pending')) ids.add(k.replace('SOP_','')); }
+        const index = JSON.parse(localStorage.getItem('searchIndex') || '{}');
+        let count=0;
+        ids.forEach(id=>{ const d=getAppr(id); if(!d) return; if(filter!=='all'&&d.category!==filter) return;
+            const matchSearch = !search ||
+                (d.id.toLowerCase().includes(search) || d.title.toLowerCase().includes(search)) ||
+                (index[id] && index[id].includes(search));
+            if(!matchSearch) return;
+            const li=document.createElement('li'); li.className='sop-list-item'; const hasP=getPend(id)!==null;
+            li.innerHTML=`<span><strong>${d.id}</strong>${hasP?' <span class="badge">pending</span>':''}<br>${d.title}</span>`;
+            li.onclick=()=>{ loadSOP(d.id); document.getElementById('sidebarSearch').value=''; c.style.display='none'; }; c.appendChild(li); count++;
+        });
+        const pendOnly=[]; for(let i=0;i<localStorage.length;i++) { const k=localStorage.key(i); if(k.endsWith('_pending')) { const id=k.replace('SOP_','').replace('_pending',''); if(!ids.has(id)) pendOnly.push(id); } }
+        pendOnly.forEach(id=>{ const d=getPend(id); if(!d) return; if(filter!=='all'&&d.category!==filter) return;
+            const matchSearch = !search ||
+                (d.id.toLowerCase().includes(search) || d.title.toLowerCase().includes(search)) ||
+                (index[id] && index[id].includes(search));
+            if(!matchSearch) return;
+            const li=document.createElement('li'); li.className='sop-list-item';
+            li.innerHTML=`<span><strong>${d.id}</strong> <span class="badge">pending</span><br>${d.title}</span>`;
+            li.onclick=()=>{ loadSOP(id,true); document.getElementById('sidebarSearch').value=''; c.style.display='none'; }; c.appendChild(li); count++;
+        });
+        c.style.display=count?'block':'none';
+    }
+    window.onFilterChange=renderDropdown; window.onSearchKeyup=renderDropdown; window.onSearchFocus=()=>{ if(dropdownVis()) renderDropdown(); };
+    document.addEventListener('click',e=>{ if(!document.querySelector('.search-wrapper')?.contains(e.target)) document.getElementById('sopListContainer').style.display='none'; });
+    const refreshDropdown = () => { if(dropdownVis()) renderDropdown(); };
+
+    // Load SOP
+    async function loadSOP(id, viewPend=false) {
+        const toast=showToast('Loading…','loading');
+        try{
+            const d=viewPend?getPend(id):getAppr(id); if(!d) throw Error('Not found');
+            document.getElementById('sopId').value=d.id; document.getElementById('sopTitle').value=d.title;
+            document.getElementById('sopCategory').value=d.category||loadCats()[0];
+            currentSOP=viewPend?null:d.id; currentPending=viewPend?d.id:null;
+            blocks=d.blocks?JSON.parse(JSON.stringify(d.blocks)):[];
+            stopSpeech(); await renderBlocks(); if(isAdmin) renderPend();
+            updateToast(toast,'Document loaded.','success');
+        } catch(e) { updateToast(toast,'Load failed.','error',()=>loadSOP(id,viewPend)); }
+    }
+
+    // Save (with search index update)
+    document.getElementById('saveSopBtn').onclick = async () => {
+        if(role==='viewer') { showToast('Access denied.','error'); return; }
+        const id=document.getElementById('sopId').value.trim(); if(!id) { showToast('Enter ID.','error'); return; }
+        const toast=showToast('Saving…','loading');
+        try{
+            pushState(); // for undo
+            for(const b of blocks) {
+                if(b.type==='text'&&b._dirty&&b.contentId) { await putObj({id:b.contentId,type:'text',data:b._content||''}); delete b._dirty; delete b._content; }
+                else if(b.type==='text'&&!b.contentId) { const cid=uuid(); await putObj({id:cid,type:'text',data:b._content||''}); b.contentId=cid; delete b._content; delete b._dirty; }
+                if(b.type==='calculator'&&b._dirty&&b.contentId) { await putObj({id:b.contentId,type:'calculator',data:b._calcContent||''}); delete b._dirty; delete b._calcContent; }
+            }
+            const sop={id, title:document.getElementById('sopTitle').value.trim(), category:document.getElementById('sopCategory').value, blocks:JSON.parse(JSON.stringify(blocks))};
+            sop.blocks.forEach(b=>{ delete b._dirty; delete b._content; delete b._calcContent; });
+            // Update search index
+            const texts = [];
+            for (const b of sop.blocks) {
+                if (b.type === 'text' && b.contentId) {
+                    const obj = await getObj(b.contentId);
+                    if (obj) texts.push(obj.data.replace(/<[^>]*>/g, ' '));
+                } else if (b.type === 'text' && b._content) {
+                    texts.push(b._content.replace(/<[^>]*>/g, ' '));
+                }
+            }
+            const index = JSON.parse(localStorage.getItem('searchIndex') || '{}');
+            if (texts.length) index[id] = texts.join(' ').toLowerCase();
+            else delete index[id];
+            localStorage.setItem('searchIndex', JSON.stringify(index));
+
+            if(isAdmin) { saveAppr(id,sop); delPend(id); updateToast(toast,'Document saved as approved.','success'); }
+            else {
+                const appr=getAppr(id); const log=genLog(appr?appr.blocks:[], sop.blocks); sop.changeLog=log;
+                savePend(id,sop); updateToast(toast,'Document saved as pending.','success');
+            }
+            clearAutoDraft();
+        } catch(e) { updateToast(toast,'Save failed.','error',()=>document.getElementById('saveSopBtn').click()); }
+    };
+    function genLog(oldB, newB) {
+        const changes=[]; const max=Math.max(oldB.length, newB.length);
+        for(let i=0;i<max;i++) { const o=oldB[i], n=newB[i]; if(!o&&n) changes.push({id:'add_'+i,type:'add',blockIndex:i,description:`Added ${n.type} section "${n.title||''}"`,newBlock:n});
+        else if(o&&!n) changes.push({id:'del_'+i,type:'delete',blockIndex:i,description:`Deleted ${o.type} section "${o.title||''}"`});
+        else if(o&&n) { let m=false,d=''; if(o.type!==n.type) { m=true; d+='type changed. '; } if(o.title!==n.title) { m=true; d+='title changed. '; } if(o.contentId!==n.contentId) { m=true; d+='content changed. '; } if(JSON.stringify(o.itemIds)!==JSON.stringify(n.itemIds)) { m=true; d+='media items changed. '; } if(m) changes.push({id:'mod_'+i,type:'modify',blockIndex:i,description:`Modified "${n.title||o.title||''}" (${n.type}): ${d}`}); } }
+        return changes;
+    }
+
+    // Speech (extract plain text from HTML)
+    async function handleRead(idx) {
+        const b=blocks[idx]; if(!b||b.type!=='text') return;
+        let content=''; if(b.contentId) { const o=await getObj(b.contentId); if(o) content=o.data; } else if(b._content) content=b._content;
+        if(!content) return;
+        const plain = content.replace(/<[^>]*>/g, ' ').trim();
+        if(!plain) { showToast('Nothing to read.','error'); return; }
+        if(speech&&speech.index===idx) { stopSpeech(); return; } stopSpeech();
+        const toast=showToast('Reading aloud…','loading');
+        const u=new SpeechSynthesisUtterance(plain); u.onend=()=>{ speech=null; updateToast(toast,'Reading complete.','success'); renderBlocks(); };
+        u.onerror=()=>{ speech=null; updateToast(toast,'Speech error.','error',()=>handleRead(idx)); renderBlocks(); };
+        speech={utterance:u, index:idx}; speechSynthesis.speak(u); renderBlocks();
+    }
+
+    // Pending approvals
+    function renderPend() {
+        const c=document.getElementById('pendingSOPList'); c.innerHTML=''; if(!isAdmin) return;
+        const ids=[]; for(let i=0;i<localStorage.length;i++) { const k=localStorage.key(i); if(k.endsWith('_pending')) ids.push(k.replace('SOP_','').replace('_pending','')); }
+        if(!ids.length) { c.innerHTML='<div style="font-style:italic;">No pending changes.</div>'; return; }
+        ids.forEach(id=>{ const pd=getPend(id); if(!pd||!pd.changeLog||!pd.changeLog.length) return;
+            const w=document.createElement('div'); w.style.marginBottom='10px; border:1px solid var(--border); border-radius:6px; padding:8px;';
+            w.innerHTML=`<strong>${pd.id}</strong> (${pd.changeLog.length} changes)`;
+            const ul=document.createElement('ul'); ul.style.listStyle='none'; ul.padding='0';
+            pd.changeLog.forEach((ch,i)=>{ const li=document.createElement('li'); li.className='pending-change-item'; li.innerHTML=`<input type="checkbox" id="ch_${id}_${i}" checked> <label for="ch_${id}_${i}">${ch.description}</label>`; ul.appendChild(li); });
+            w.appendChild(ul); c.appendChild(w);
+        });
+    }
+    document.getElementById('applySelectedChangesBtn').onclick = async () => {
+        if(!isAdmin) return;
+        const ids=[]; for(let i=0;i<localStorage.length;i++) { const k=localStorage.key(i); if(k.endsWith('_pending')) ids.push(k.replace('SOP_','').replace('_pending','')); }
+        if(!ids.length) { showToast('No pending.','error'); return; }
+        let any=false; ids.forEach(id=>{ const pd=getPend(id); if(!pd||!pd.changeLog) return; for(let i=0;i<pd.changeLog.length;i++) if(document.getElementById(`ch_${id}_${i}`)?.checked) any=true; });
+        if(!any) { if(!confirm('No changes selected. Discard all?')) return; const toast=showToast('Discarding…','loading'); ids.forEach(id=>delPend(id)); renderPend(); updateToast(toast,'All discarded.','success'); return; }
+        const toast=showToast('Applying…','loading');
+        try{
+            ids.forEach(id=>{ const pd=getPend(id); if(!pd||!pd.changeLog) return; const appr=getAppr(id)||{id,title:pd.title,category:pd.category,blocks:[]}; let upd=JSON.parse(JSON.stringify(appr.blocks));
+                pd.changeLog.forEach((ch,i)=>{ const cb=document.getElementById(`ch_${id}_${i}`); if(!cb||!cb.checked) return;
+                    if(ch.type==='add'&&ch.newBlock) upd.splice(ch.blockIndex,0,JSON.parse(JSON.stringify(ch.newBlock)));
+                    else if(ch.type==='delete') { if(ch.blockIndex<upd.length) upd.splice(ch.blockIndex,1); }
+                    else if(ch.type==='modify'&&ch.newBlock) { if(ch.blockIndex<upd.length) upd[ch.blockIndex]=JSON.parse(JSON.stringify(ch.newBlock)); }
+                });
+                appr.blocks=upd; saveAppr(id,appr); delPend(id);
+            });
+            updateToast(toast,'Changes applied.','success'); renderPend();
+            if(currentSOP) await loadSOP(currentSOP); else { document.getElementById('sopId').value=''; blocks=[{type:'text',title:'',contentId:null}]; await renderBlocks(); }
+        } catch(e) { updateToast(toast,'Approval failed.','error',()=>document.getElementById('applySelectedChangesBtn').click()); }
+    };
+
+    // Delete document (admin)
+    document.getElementById('adminDeleteSOPBtn').onclick = async () => {
+        const id=document.getElementById('sopId').value.trim(); if(!id) { showToast('No document loaded.','error'); return; }
+        if(!confirm(`Delete ${id}?`)) return; const toast=showToast('Deleting…','loading');
+        try{ delAppr(id); removeFromSearchIndex(id); document.getElementById('sopId').value=''; document.getElementById('sopTitle').value=''; blocks=[{type:'text',title:'',contentId:null}]; await renderBlocks(); updateToast(toast,'Deleted.','success'); }
+        catch(e) { updateToast(toast,'Delete failed.','error',()=>document.getElementById('adminDeleteSOPBtn').click()); }
+    };
+    document.getElementById('clearFormBtn').onclick = async () => {
+        if(role==='viewer') { showToast('Access denied.','error'); return; }
+        pushState();
+        document.getElementById('sopId').value=''; document.getElementById('sopTitle').value=''; document.getElementById('sopCategory').value=loadCats()[0];
+        blocks=[{type:'text',title:'',contentId:null}]; currentSOP=null; currentPending=null; stopSpeech(); await renderBlocks(); showToast('Form cleared.','success');
+    };
+
+    // Single SOP export/import
+    document.getElementById('exportSingleSOPBtn').onclick = async () => {
+        const id = document.getElementById('sopId').value.trim();
+        if (!id) { showToast('No SOP loaded to export.', 'error'); return; }
+        const toast = showToast('Exporting SOP…', 'loading');
+        try {
+            const sopData = getAppr(id) || getPend(id);
+            if (!sopData) throw new Error('SOP not found');
+            const exportData = { ...sopData };
+            const allObjs = await getAll();
+            const neededIds = new Set();
+            exportData.blocks.forEach(b => {
+                if (b.contentId) neededIds.add(b.contentId);
+                if (b.itemIds) b.itemIds.forEach(id => neededIds.add(id));
+            });
+            const includedObjs = allObjs.filter(o => neededIds.has(o.id));
+            const finalExport = { sop: exportData, objects: includedObjs };
+            const blob = new Blob([JSON.stringify(finalExport)], { type: 'application/json' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+            a.download = `SOP_${id}_export.json`; a.click(); URL.revokeObjectURL(a.href);
+            updateToast(toast, 'SOP exported.', 'success');
+        } catch (e) { updateToast(toast, 'Export failed.', 'error', () => document.getElementById('exportSingleSOPBtn').click()); }
+    };
+    document.getElementById('importSingleSOPBtn').onclick = () => {
+        const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.json';
+        inp.onchange = async e => {
+            const f = e.target.files[0]; if (!f) return;
+            const toast = showToast('Importing SOP…', 'loading');
+            const r = new FileReader();
+            r.onload = async ev => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if (!data.sop || !data.objects) throw new Error('Invalid format');
+                    if (!confirm(`Import SOP "${data.sop.id}"?`)) { toast.remove(); return; }
+                    for (const obj of data.objects) await putObj(obj);
+                    saveAppr(data.sop.id, data.sop);
+                    removeFromSearchIndex(data.sop.id);
+                    updateToast(toast, 'SOP imported. Load it from the list.', 'success');
+                    renderDropdown();
+                } catch (ex) { updateToast(toast, 'Invalid file.', 'error', () => document.getElementById('importSingleSOPBtn').click()); }
+            };
+            r.readAsText(f);
+        };
+        inp.click();
+    };
+
+    // ---------- ENHANCED MEDIA VIEWER (PDF + Video) ----------
+    window.closeViewer = () => {
+        document.getElementById('viewerModal').style.display = 'none';
+        document.getElementById('viewerContainer').innerHTML = '';
+    };
+
+    window.openPdfViewer = (base64Data) => {
+        const modal = document.getElementById('viewerModal');
+        const container = document.getElementById('viewerContainer');
+        container.innerHTML = '';
+        const blobUrl = URL.createObjectURL(new Blob(
+            [Uint8Array.from(atob(base64Data.split(',')[1]), c => c.charCodeAt(0))],
+            {type: 'application/pdf'}
+        ));
+        const iframe = document.createElement('iframe');
+        iframe.src = blobUrl;
+        container.appendChild(iframe);
+        modal.style.display = 'flex';
+    };
+
+    window.openVideoPlayer = (url) => {
+        const modal = document.getElementById('viewerModal');
+        const container = document.getElementById('viewerContainer');
+        container.innerHTML = '';
+        let embedHtml = '';
+        // YouTube
+        if (url.includes('youtube.com/watch') || url.includes('youtu.be/')) {
+            let vid = url.split('v=')[1]?.split('&')[0] || url.split('/').pop();
+            embedHtml = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${vid}" frameborder="0" allowfullscreen></iframe>`;
+        }
+        // Vimeo
+        else if (url.includes('vimeo.com')) {
+            const vid = url.split('/').pop();
+            embedHtml = `<iframe width="100%" height="100%" src="https://player.vimeo.com/video/${vid}" frameborder="0" allowfullscreen></iframe>`;
+        }
+        // Direct video file
+        else {
+            embedHtml = `<video width="100%" height="100%" controls><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+        }
+        container.innerHTML = embedHtml;
+        modal.style.display = 'flex';
+    };
+
+    // Add video link prompt
+    window.addVideoLink = (blockIndex) => {
+        const block = blocks[blockIndex];
+        const url = prompt('Enter video URL (YouTube, Vimeo, or direct MP4):');
+        if (!url) return;
+        const caption = prompt('Enter caption (optional):') || 'Video';
+        const id = uuid();
+        putObj({
+            id,
+            type: 'media-item',
+            data: {
+                caption,
+                mimeType: 'video/url',
+                data: url, // store the URL directly
+            }
+        }).then(() => {
+            block.itemIds.push(id);
+            renderBlocks();
+            showToast('Video link added.', 'success');
+        }).catch(() => showToast('Failed to add video.', 'error'));
+    };
+
+    // View helpers (for images we keep the old new-tab method)
+    window.viewMedia = (url,mime) => {
+        const blob=url.startsWith('data:')?(()=>{const arr=url.split(','),m=arr[0].match(/:(.*?);/),b=atob(arr[1]),u8=new Uint8Array(b.length); for(let i=0;i<b.length;i++) u8[i]=b.charCodeAt(i); return new Blob([u8],{type:mime});})() : null;
+        if(blob) window.open(URL.createObjectURL(blob),'_blank'); else window.open(url,'_blank');
+    };
+    window.downloadMedia = (url,name) => { const a=document.createElement('a'); a.href=url; a.download=name; a.click(); };
+    window.deleteMediaItem = (bi,ii) => { if(role==='viewer') { showToast('Access denied.','error'); return; } const block=blocks[bi]; if(block&&block.itemIds) { block.itemIds.splice(ii,1); renderBlocks(); showToast('Media removed.','success'); } };
+
+    async function runCalc(index) { const b=blocks[index]; if(!b) return; let c=''; if(b.contentId) { const o=await getObj(b.contentId); if(o) c=o.data; } else if(b._calcContent) c=b._calcContent; if(!c) { showToast('No calculator.','error'); return; } const blob=new Blob([c],{type:'text/html'}); window.open(URL.createObjectURL(blob),'_blank'); }
+
+    async function renderBlocks() {
+        const root=document.getElementById('blocksRoot'); if(!root) return; root.innerHTML='';
+        const canEdit=role!=='viewer';
+        for(let i=0;i<blocks.length;i++) {
+            const block=blocks[i];
+            const cont=document.createElement('div'); cont.className='section-box'; cont.style.position='relative';
+            const lbl=document.createElement('div'); lbl.style='font-weight:bold; margin-bottom:8px; color:var(--accent);';
+            lbl.textContent=block.type==='text'?'📝 Text Section':(block.type==='media'?'🖼️ Media Section':'🧮 Calculator Section'); cont.appendChild(lbl);
+
+            const tr=document.createElement('div'); tr.className='title-row';
+            const ti=document.createElement('input'); ti.type='text'; ti.placeholder='Section title...'; ti.value=block.title||''; ti.style.marginTop='0'; ti.style.flex='1';
+            ti.oninput=e=>{ blocks[i].title=e.target.value; }; if(!canEdit) ti.disabled=true; tr.appendChild(ti);
+            if(block.type==='text') { const r=document.createElement('button'); r.className='btn-icon no-print'; r.title='Read aloud'; const act=speech&&speech.index===i; r.innerHTML=act?'⏹':'🔊'; r.onclick=e=>{ e.stopPropagation(); handleRead(i); }; tr.appendChild(r); }
+            cont.appendChild(tr);
+
+            if(block.type==='text') {
+                const toolbar = document.createElement('div'); toolbar.className = 'editor-toolbar no-print';
+                if(canEdit) {
+                    toolbar.innerHTML = `
+                        <button data-cmd="bold"><b>B</b></button>
+                        <button data-cmd="italic"><i>I</i></button>
+                        <button data-cmd="underline"><u>U</u></button>
+                        <button data-cmd="insertUnorderedList">• List</button>
+                        <button data-cmd="insertOrderedList">1. List</button>
+                    `;
+                }
+                const editor = document.createElement('div'); editor.className = 'rich-editor';
+                if(!canEdit) editor.contentEditable = 'false';
+                else {
+                    editor.contentEditable = 'true';
+                    let content = ''; if(block.contentId) { const o=await getObj(block.contentId); if(o) content=o.data; } else if(block._content) content=block._content;
+                    editor.innerHTML = content;
+                    editor.addEventListener('input', () => {
+                        blocks[i]._dirty = true;
+                        blocks[i]._content = editor.innerHTML;
+                    });
+                    toolbar.querySelectorAll('button').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const cmd = btn.dataset.cmd;
+                            if (cmd === 'bold' || cmd === 'italic' || cmd === 'underline' ||
+                                cmd === 'insertUnorderedList' || cmd === 'insertOrderedList') {
+                                document.execCommand(cmd, false, null);
+                                editor.focus();
+                                blocks[i]._dirty = true;
+                                blocks[i]._content = editor.innerHTML;
+                            }
+                        });
+                    });
+                }
+                if(canEdit) cont.appendChild(toolbar);
+                cont.appendChild(editor);
+            } else if(block.type==='media') {
+                if(!block.itemIds) block.itemIds=[];
+                const mc=document.createElement('div'); mc.className='gallery-grid';
+                const renderItems=async()=>{ mc.innerHTML='';
+                    for(let j=0;j<block.itemIds.length;j++) { const id=block.itemIds[j]; const obj=await getObj(id); if(!obj) continue;
+                        const cap=obj.data?.caption||''; const mime=obj.data?.mimeType||'image/png';
+                        const itemDiv=document.createElement('div'); itemDiv.className='gallery-item';
+                        if(mime==='application/pdf') {
+                            itemDiv.innerHTML = `
+                                <div class="pdf-icon" onclick="openPdfViewer('${obj.data.data}')">📄</div>
+                                <input class="media-caption" value="${cap}" ${canEdit?'':'disabled'} oninput="(async()=>{const o=await getObj('${id}'); if(o){o.data.caption=this.value; await putObj(o);}})()">
+                                <div style="display:flex;gap:4px;margin-top:4px;">
+                                    <button class="btn btn-primary btn-sm" onclick="openPdfViewer('${obj.data.data}')">👁️ View</button>
+                                    <button class="btn btn-sm" onclick="downloadMedia('${obj.data.data}','${cap||'document.pdf'}')">⬇️</button>
+                                </div>
+                                ${canEdit?`<button class="btn btn-danger btn-sm" style="margin-top:4px;" onclick="deleteMediaItem(${i},${j})">✕</button>`:''}
+                            `;
+                        } else if(mime==='video/url') {
+                            const videoUrl = obj.data.data;
+                            itemDiv.innerHTML = `
+                                <div class="video-icon" onclick="openVideoPlayer('${videoUrl.replace(/'/g, "\\'")}')">🎥</div>
+                                <input class="media-caption" value="${cap}" ${canEdit?'':'disabled'} oninput="(async()=>{const o=await getObj('${id}'); if(o){o.data.caption=this.value; await putObj(o);}})()">
+                                <div style="display:flex;gap:4px;margin-top:4px;">
+                                    <button class="btn btn-primary btn-sm" onclick="openVideoPlayer('${videoUrl.replace(/'/g, "\\'")}')">▶ Play</button>
+                                </div>
+                                ${canEdit?`<button class="btn btn-danger btn-sm" style="margin-top:4px;" onclick="deleteMediaItem(${i},${j})">✕</button>`:''}
+                            `;
+                        } else {
+                            itemDiv.innerHTML = `
+                                <img src="${obj.data.data}" onclick="viewMedia('${obj.data.data}','${mime}')">
+                                <input class="media-caption" value="${cap}" ${canEdit?'':'disabled'} oninput="(async()=>{const o=await getObj('${id}'); if(o){o.data.caption=this.value; await putObj(o);}})()">
+                                ${canEdit?`<button class="btn btn-danger btn-sm" style="margin-top:4px;" onclick="deleteMediaItem(${i},${j})">✕</button>`:''}
+                            `;
+                        }
+                        mc.appendChild(itemDiv);
+                    }
+                };
+                await renderItems(); cont.appendChild(mc);
+                if(canEdit) {
+                    const addFileBtn=document.createElement('button'); addFileBtn.className='btn btn-primary btn-sm'; addFileBtn.textContent='+ Add Image/PDF'; addFileBtn.style.marginTop='8px';
+                    addFileBtn.onclick=()=>{
+                        const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*,application/pdf';
+                        inp.onchange=async e=>{ const f=e.target.files[0]; if(!f) return; const toast=showToast('Uploading…','loading'); try{
+                            const r=new FileReader(); r.onload=async ev=>{ const id=uuid(); const mime=f.type||(f.name.endsWith('.pdf')?'application/pdf':'image/png'); await putObj({id,type:'media-item',data:{caption:f.name, data:ev.target.result, mimeType:mime}}); block.itemIds.push(id); await renderBlocks(); updateToast(toast,'File uploaded.','success'); }; r.readAsDataURL(f);
+                        } catch { updateToast(toast,'Upload failed.','error',()=>{}); } }; inp.click();
+                    };
+                    const addVidBtn=document.createElement('button'); addVidBtn.className='btn btn-primary btn-sm'; addVidBtn.textContent='+ Add Video Link'; addVidBtn.style.marginTop='4px';
+                    addVidBtn.onclick=()=> addVideoLink(i);
+                    cont.appendChild(addFileBtn);
+                    cont.appendChild(addVidBtn);
+                }
+            } else if(block.type==='calculator') {
+                let calc=''; if(block.contentId) { const o=await getObj(block.contentId); if(o) calc=o.data; } else if(block._calcContent) calc=block._calcContent;
+                if(calc) { const prev=document.createElement('div'); prev.style='margin:8px 0; padding:6px; background:white; border:1px dashed #ccc; border-radius:4px;'; prev.innerHTML=`<strong>Attached:</strong> ${block.title||'Unnamed'}<br>`;
+                    const rb=document.createElement('button'); rb.className='btn btn-primary btn-sm'; rb.style.marginTop='4px'; rb.textContent='▶ Run'; rb.addEventListener('click',()=>runCalc(i)); prev.appendChild(rb); cont.appendChild(prev); }
+                else { const ph=document.createElement('div'); ph.textContent='No calculator attached.'; ph.style='margin:8px 0; font-style:italic;'; cont.appendChild(ph); }
+                if(canEdit) { const up=document.createElement('button'); up.className='btn btn-primary btn-sm'; up.textContent='📎 Attach HTML'; up.style.marginTop='8px';
+                    up.onclick=()=>{ const inp=document.createElement('input'); inp.type='file'; inp.accept='.html';
+                        inp.onchange=async e=>{ const f=e.target.files[0]; if(!f) return; const toast=showToast('Uploading…','loading'); try{ const r=new FileReader(); r.onload=async ev=>{ const id=uuid(); await putObj({id,type:'calculator',data:ev.target.result}); block.contentId=id; block.title=f.name.replace('.html',''); delete block._calcContent; await renderBlocks(); updateToast(toast,'Calculator uploaded.','success'); }; r.readAsText(f); } catch { updateToast(toast,'Upload failed.','error',()=>{}); } }; inp.click(); }; cont.appendChild(up); }
+            }
+            if(canEdit) { const act=document.createElement('div'); act.className='block-actions no-print'; act.innerHTML=`<button class="btn btn-sm" style="background:#f0f0f0;" onclick="moveBlock(${i},-1)">▲</button><button class="btn btn-sm" style="background:#f0f0f0;" onclick="moveBlock(${i},1)">▼</button><button class="btn btn-danger btn-sm" onclick="deleteBlock(${i})">✕</button>`; cont.appendChild(act); }
+            root.appendChild(cont);
+        }
+        // Update calc list in sidebar
+        const calcCont=document.getElementById('calcList'); calcCont.innerHTML='';
+        for(const b of blocks) { if(b.type!=='calculator') continue; let c=''; if(b.contentId) { const o=await getObj(b.contentId); if(o) c=o.data; } else if(b._calcContent) c=b._calcContent; if(!c) continue;
+            const d=document.createElement('div'); d.style='display:flex; justify-content:space-between; align-items:center; padding:5px; border-bottom:1px solid var(--border); font-size:0.75rem;';
+            d.innerHTML=`<span>🧮 ${b.title||'Unnamed'}</span>`;
+            const btn=document.createElement('button'); btn.className='btn btn-primary btn-sm'; btn.textContent='Run'; btn.onclick=()=>runCalc(blocks.indexOf(b)); d.appendChild(btn); calcCont.appendChild(d);
+        }
+        if(!calcCont.children.length) calcCont.innerHTML='<div style="font-style:italic;font-size:0.8rem;">No calculators added.</div>';
+    }
+
+    window.moveBlock=(i,d)=>{ if(role==='viewer') return; pushState(); const n=i+d; if(n<0||n>=blocks.length) return; [blocks[i],blocks[n]]=[blocks[n],blocks[i]]; renderBlocks(); showToast('Block moved.','success'); };
+    window.deleteBlock=async i=>{ if(role==='viewer') return; pushState(); if(!confirm('Delete?')) return; blocks.splice(i,1); await renderBlocks(); showToast('Block deleted.','success'); };
+    function addText() { pushState(); blocks.push({type:'text',title:'',contentId:null}); renderBlocks(); showToast('Text section added.','success'); }
+    function addMedia() { pushState(); blocks.push({type:'media',title:'New Media',itemIds:[]}); renderBlocks(); showToast('Media section added.','success'); }
+    function addCalc() { pushState(); blocks.push({type:'calculator',title:'Calculator',contentId:null}); renderBlocks(); showToast('Calculator section added.','success'); }
+
+    document.getElementById('addTextBlockBtn').onclick=()=>{ if(role==='viewer') return; addText(); };
+    document.getElementById('addMediaBlockBtn').onclick=()=>{ if(role==='viewer') return; addMedia(); };
+    document.getElementById('addCalcBlockBtn').onclick=()=>{ if(role==='viewer') return; addCalc(); };
+    document.getElementById('roleSelector').onchange=setRole;
+    document.getElementById('toggleSidebarBtn').onclick=()=>{ const s=document.getElementById('sidebar'); s.classList.toggle('sidebar-hidden'); document.getElementById('toggleSidebarBtn').innerHTML=s.classList.contains('sidebar-hidden')?'▶':'◀'; };
+
+    // PWA Install logic
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('installBtn').style.display = 'inline-flex';
+    });
+    document.getElementById('installBtn').addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            document.getElementById('installBtn').style.display = 'none';
+        }
+        deferredPrompt = null;
+    });
+
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', async () => {
+            try {
+                const registration = await navigator.serviceWorker.register("data:text/javascript," + encodeURIComponent(
+                    `self.addEventListener('install', e => {
+                        e.waitUntil(
+                            caches.open('sop-ws-v1').then(cache => cache.addAll(['/']))
+                        );
+                    });
+                    self.addEventListener('fetch', e => {
+                        e.respondWith(
+                            caches.match(e.request).then(resp => resp || fetch(e.request))
+                        );
+                    });`
+                ));
+                console.log('Service Worker registered');
+            } catch (err) {
+                console.log('Service Worker not supported in this context (file://) – PWA requires HTTPS or localhost.');
+            }
+        });
+    }
+
+    // Init
+    window.addEventListener('load', async ()=>{
+        await openDB();
+        renderCatDropdowns(); applySets(loadSets()); setRole();
+        // Check for auto-draft if no current SOP
+        if (!currentSOP) {
+            const draftRaw = localStorage.getItem('autoDraft');
+            if (draftRaw) {
+                try {
+                    const draft = JSON.parse(draftRaw);
+                    if (draft.id && draft.blocks) {
+                        if (confirm('Unsaved draft found. Restore?')) {
+                            document.getElementById('sopId').value = draft.id;
+                            document.getElementById('sopTitle').value = draft.title;
+                            document.getElementById('sopCategory').value = draft.category || loadCats()[0];
+                            blocks = draft.blocks;
+                        } else {
+                            clearAutoDraft();
+                        }
+                    } else clearAutoDraft();
+                } catch { clearAutoDraft(); }
+            }
+        }
+        if(!blocks.length) blocks.push({type:'text',title:'Example Section',contentId:null, _content:'Enter your procedure description here.'});
+        await renderBlocks();
+        document.getElementById('loginModal').addEventListener('click',e=>{ if(e.target===document.getElementById('loginModal')) closeAdminLogin(); });
+        document.getElementById('credModal').addEventListener('click',e=>{ if(e.target===document.getElementById('credModal')) closeCredModal(); });
+        document.getElementById('viewerModal').addEventListener('click', e => { if (e.target === document.getElementById('viewerModal')) closeViewer(); });
+        showToast('App ready.','success');
+    });
+})();
+</script>
+</body>
+</html>
